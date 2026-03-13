@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PromptForge Dev Settings</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="options-wrap">
+      <section class="glass-card settings-hero">
+        <span class="preview-pill">Developer profile</span>
+        <h1>Tùy chỉnh DNA của PromptForge Dev</h1>
+        <p>
+          Thiết lập tone, target model, stack ưa thích và nguyên tắc review để mọi prompt đều đi đúng phong cách của bạn.
+        </p>
+      </section>
+
+      <section class="glass-card settings-card">
+        <div class="mini-grid two-col">
+          <label>
+            <span>Tên của bạn / studio</span>
+            <input id="ownerName" type="text" placeholder="koiq Studio" />
+          </label>
+          <label>
+            <span>Brand tone</span>
+            <input id="brandTone" type="text" placeholder="Dark, technical, focused, confident" />
+          </label>
+        </div>
+
+        <div class="mini-grid two-col">
+          <label>
+            <span>Default language</span>
+            <select id="defaultLanguage">
+              <option value="English">English</option>
+              <option value="Vietnamese">Vietnamese</option>
+              <option value="Bilingual">Bilingual</option>
+            </select>
+          </label>
+          <label>
+            <span>Default mode</span>
+            <select id="defaultMode">
+              <option value="Code Review">Code Review</option>
+              <option value="Bug Investigation">Bug Investigation</option>
+              <option value="Refactor Planner">Refactor Planner</option>
+              <option value="API Design">API Design</option>
+              <option value="Test Generation">Test Generation</option>
+            </select>
+          </label>
+        </div>
+
+        <label>
+          <span>Target model</span>
+          <input id="targetModel" type="text" placeholder="ChatGPT / Claude" />
+        </label>
+
+        <label>
+          <span>Preferred stack</span>
+          <textarea id="preferredStack" rows="3" placeholder="React, Next.js, TypeScript, Node.js, PostgreSQL"></textarea>
+        </label>
+
+        <label>
+          <span>Review rules</span>
+          <textarea id="reviewRules" rows="5" placeholder="Explain root cause first. Prefer smallest reliable fix. Preserve coding style. Mention tests."></textarea>
+        </label>
+
+        <label>
+          <span>Output preference</span>
+          <textarea id="outputPreference" rows="4" placeholder="Root cause, Fix summary, Updated code, Tests"></textarea>
+        </label>
+
+        <label>
+          <span>Signature instructions</span>
+          <textarea id="signatureInstructions" rows="4" placeholder="Be practical, senior-level, low fluff, implementation-aware."></textarea>
+        </label>
+
+        <div class="button-row">
+          <button id="saveProfileBtn" class="primary-btn">Lưu cấu hình</button>
+          <button id="resetProfileBtn" class="secondary-btn">Khôi phục mặc định</button>
+          <span id="saveStatus" class="inline-note">Chưa lưu thay đổi</span>
+        </div>
+      </section>
+    </div>
+
+    <script src="prompt-engine.js"></script>
+    <script src="options.js"></script>
+  </body>
+</html>

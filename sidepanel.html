@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PromptForge Dev</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="dev-app-shell">
+      <section class="studio-shell">
+        <div class="studio-frame">
+          <div class="studio-topbar">
+            <div class="brand-block">
+              <div class="brand-logo">&gt;_</div>
+              <div>
+                <div class="brand-title">PromptForge Dev</div>
+                <div class="brand-subtitle">Developer prompt studio</div>
+              </div>
+            </div>
+            <div class="topbar-actions">
+              <button id="historyBtn" class="icon-btn" title="History">⟳</button>
+              <button id="openOptionsBtn" class="icon-btn" title="Settings">⚙</button>
+            </div>
+          </div>
+
+          <div class="studio-body">
+            <div class="tab-row" id="tabRow"></div>
+
+            <section class="tab-panel active" data-panel="write">
+              <div class="glass-card editor-card">
+                <div class="card-header-row">
+                  <div class="card-title">Prompt Editor</div>
+                  <span class="status-badge">Target: <strong id="targetModelLabel">ChatGPT / Claude</strong></span>
+                </div>
+
+                <div class="mini-grid two-col">
+                  <label class="mini-field">
+                    <span>Mode</span>
+                    <select id="modeSelect">
+                      <option>Code Review</option>
+                      <option>Bug Investigation</option>
+                      <option>Refactor Planner</option>
+                      <option>API Design</option>
+                      <option>Test Generation</option>
+                    </select>
+                  </label>
+                  <label class="mini-field">
+                    <span>Language</span>
+                    <select id="languageSelect">
+                      <option>English</option>
+                      <option>Vietnamese</option>
+                      <option>Bilingual</option>
+                    </select>
+                  </label>
+                </div>
+
+                <div class="input-stack">
+                  <label>
+                    <span>Prompt name</span>
+                    <input id="promptName" type="text" placeholder="Ví dụ: Next.js auth review" />
+                  </label>
+                  <label>
+                    <span>Role</span>
+                    <input id="roleInput" type="text" placeholder="Senior software engineer and code reviewer" />
+                  </label>
+                  <label>
+                    <span>Task</span>
+                    <textarea id="taskInput" rows="4" placeholder="Describe what the model should do."></textarea>
+                  </label>
+                  <label>
+                    <span>Stack</span>
+                    <input id="stackInput" type="text" placeholder="React, Next.js, TypeScript, Node.js" />
+                  </label>
+                  <div class="mini-grid two-col">
+                    <label>
+                      <span>Context</span>
+                      <textarea id="contextInput" rows="6" placeholder="Expected behavior&#10;Actual behavior&#10;Logs / code path"></textarea>
+                    </label>
+                    <label>
+                      <span>Constraints + Output</span>
+                      <textarea id="constraintsInput" rows="6" placeholder="Keep the fix small&#10;Preserve current style&#10;Mention tests"></textarea>
+                    </label>
+                  </div>
+                </div>
+
+                <label>
+                  <span>Main prompt</span>
+                  <textarea id="promptEditor" class="prompt-editor" spellcheck="false"></textarea>
+                </label>
+
+                <div class="chip-row" id="quickFieldRow"></div>
+
+                <div class="button-row">
+                  <button id="generateBtn" class="primary-btn">✦ Generate</button>
+                  <button id="refineBtn" class="secondary-btn">↻ Refine</button>
+                  <button id="copyBtn" class="secondary-btn">⧉ Copy</button>
+                  <button id="saveBtn" class="secondary-btn">⌁ Save</button>
+                </div>
+              </div>
+
+              <div class="mini-grid two-col stats-grid">
+                <div class="glass-card">
+                  <div class="card-title small">Quick Actions</div>
+                  <div class="chip-row" id="smartActionRow"></div>
+                </div>
+                <div class="glass-card">
+                  <div class="card-title small">Prompt Health</div>
+                  <div class="score-box">
+                    <div>
+                      <div class="score-label">Overall Score</div>
+                      <div class="score-value"><span id="overallScore">0</span>/100</div>
+                    </div>
+                  </div>
+                  <p id="healthHint" class="muted-copy">Strong structure. Add stack details and output constraints for better answers.</p>
+                </div>
+              </div>
+            </section>
+
+            <section class="tab-panel" data-panel="templates">
+              <div class="panel-stack">
+                <label class="search-box">
+                  <span>Search templates</span>
+                  <input id="templateSearch" type="text" placeholder="Search developer templates..." />
+                </label>
+                <div id="templateList" class="panel-stack"></div>
+              </div>
+            </section>
+
+            <section class="tab-panel" data-panel="library">
+              <div class="panel-stack" id="libraryList"></div>
+            </section>
+
+            <section class="tab-panel" data-panel="refine">
+              <div class="glass-card">
+                <div class="card-title">Refine Prompt</div>
+                <div class="chip-row" id="refineActionRow"></div>
+                <label>
+                  <span>Prompt to refine</span>
+                  <textarea id="refineSource" rows="7" class="prompt-editor" spellcheck="false"></textarea>
+                </label>
+                <div class="refined-box">
+                  <div class="refined-label">Refined</div>
+                  <textarea id="refinedOutput" rows="8" class="prompt-editor" spellcheck="false" placeholder="Refined prompt will appear here..."></textarea>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <section class="info-column">
+        <div class="hero-copy-card">
+          <span class="preview-pill">Preview concept</span>
+          <h1>UI extension viết prompt dành riêng cho developer</h1>
+          <p>
+            Bản này đi theo hướng <strong>dark, technical, focused</strong> — ưu tiên viết prompt nhanh,
+            chỉnh lại rõ cấu trúc và tái sử dụng prompt cho các tác vụ như review code, debug, refactor,
+            API design và test generation.
+          </p>
+        </div>
+
+        <div class="feature-grid three-col">
+          <article class="glass-card feature-card">
+            <div class="feature-icon">{ }</div>
+            <div class="card-title small">Core blocks</div>
+            <p>Role, Task, Stack, Constraints, Output format. Thiết kế để prompt bớt mơ hồ và ra đúng kiểu câu trả lời kỹ thuật.</p>
+          </article>
+          <article class="glass-card feature-card">
+            <div class="feature-icon">⌘</div>
+            <div class="card-title small">Smart refine</div>
+            <p>Shorten, clarify, add edge cases, better for model target. Hợp cho workflow dev cần chỉnh prompt liên tục.</p>
+          </article>
+          <article class="glass-card feature-card">
+            <div class="feature-icon">✓</div>
+            <div class="card-title small">Prompt quality</div>
+            <div class="metric-stack" id="metricStack"></div>
+          </article>
+        </div>
+
+        <div class="feature-grid two-col">
+          <article class="glass-card">
+            <div class="card-title">Điểm nhấn trong thiết kế này</div>
+            <div class="highlight-grid">
+              <div class="highlight-card">
+                <div class="feature-icon">&lt;/&gt;</div>
+                <div class="highlight-title">Cảm giác dev tool rõ rệt</div>
+                <p>Màu tối kỹ thuật, khối gọn, typography mạnh, đúng tinh thần công cụ cho developer.</p>
+              </div>
+              <div class="highlight-card">
+                <div class="feature-icon">⚡</div>
+                <div class="highlight-title">Thao tác nhanh</div>
+                <p>Nút Generate, Refine, Copy, Save luôn hiện rõ, ít bước thừa.</p>
+              </div>
+              <div class="highlight-card">
+                <div class="feature-icon">🐞</div>
+                <div class="highlight-title">Phù hợp use case thật</div>
+                <p>Review code, debug, viết test, lên kế hoạch refactor, phân tích log.</p>
+              </div>
+              <div class="highlight-card">
+                <div class="feature-icon">↗</div>
+                <div class="highlight-title">Có thể phát triển tiếp</div>
+                <p>Thêm history, sync, snippet library, variable prompt, model presets.</p>
+              </div>
+            </div>
+          </article>
+
+          <article class="glass-card">
+            <div class="card-title">Palette</div>
+            <div class="palette-stack">
+              <div class="palette-row"><span>Background</span><code>#0A0D14</code></div>
+              <div class="palette-row"><span>Surface</span><code>#111827</code></div>
+              <div class="palette-row"><span>Card</span><code>#0F1726</code></div>
+              <div class="palette-row"><span>Border</span><code>rgba(255,255,255,0.08)</code></div>
+              <div class="palette-row"><span>Accent</span><code>Cyan → Indigo → Violet</code></div>
+            </div>
+          </article>
+        </div>
+      </section>
+    </div>
+
+    <script src="prompt-engine.js"></script>
+    <script src="sidepanel.js"></script>
+  </body>
+</html>
