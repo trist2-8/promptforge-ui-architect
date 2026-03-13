@@ -19,7 +19,8 @@
               </div>
             </div>
             <div class="topbar-actions">
-              <button id="historyBtn" class="icon-btn" title="History">⟳</button>
+              <span id="autosaveBadge" class="inline-badge neutral">Draft idle</span>
+              <button id="historyBtn" class="icon-btn" title="Library">⟳</button>
               <button id="openOptionsBtn" class="icon-btn" title="Settings">⚙</button>
             </div>
           </div>
@@ -28,59 +29,139 @@
             <div class="tab-row" id="tabRow"></div>
 
             <section class="tab-panel active" data-panel="write">
+              <div class="glass-card workspace-card">
+                <div class="card-header-row">
+                  <div>
+                    <div class="card-title">Workspace Presets</div>
+                    <div class="card-caption">Lưu preset theo project, stack và style review để generate prompt nhanh hơn.</div>
+                  </div>
+                  <span class="inline-badge neutral" id="workspaceCountBadge">0 workspace</span>
+                </div>
+
+                <div class="mini-grid two-col">
+                  <label>
+                    <span>Active workspace</span>
+                    <div class="custom-select" id="workspaceSelectWrap" data-input="workspaceSelect" data-placeholder="Choose workspace">
+                      <button type="button" class="custom-select-trigger"><span data-label>Choose workspace</span><span class="caret">▾</span></button>
+                      <div class="custom-select-menu" id="workspaceSelectMenu"></div>
+                      <input id="workspaceSelect" type="hidden" value="" />
+                    </div>
+                  </label>
+                  <label>
+                    <span>Workspace name</span>
+                    <input id="workspaceNameInput" type="text" placeholder="Ví dụ: Billing API, App Router Auth, Design System" />
+                  </label>
+                </div>
+
+                <div class="button-row">
+                  <button id="applyWorkspaceBtn" class="secondary-btn">⇢ Apply workspace</button>
+                  <button id="saveWorkspaceBtn" class="secondary-btn">⌁ Save current as workspace</button>
+                  <button id="newWorkspaceBtn" class="secondary-btn">＋ New workspace</button>
+                  <button id="deleteWorkspaceBtn" class="secondary-btn danger-soft">✕ Delete active</button>
+                </div>
+                <div id="workspaceSummary" class="workspace-summary muted-copy">No workspace selected.</div>
+              </div>
+
               <div class="glass-card editor-card">
                 <div class="card-header-row">
-                  <div class="card-title">Prompt Editor</div>
+                  <div>
+                    <div class="card-title">Prompt Editor</div>
+                    <div class="card-caption">Build structured prompts for dev workflows, resolve variables, then save reusable variants.</div>
+                  </div>
                   <span class="status-badge">Target: <strong id="targetModelLabel">ChatGPT / Claude</strong></span>
                 </div>
 
                 <div class="mini-grid two-col">
                   <label class="mini-field">
                     <span>Mode</span>
-                    <select id="modeSelect">
-                      <option>Code Review</option>
-                      <option>Bug Investigation</option>
-                      <option>Refactor Planner</option>
-                      <option>API Design</option>
-                      <option>Test Generation</option>
-                    </select>
+                    <div class="custom-select" data-input="modeSelect">
+                      <button type="button" class="custom-select-trigger"><span data-label>Code Review</span><span class="caret">▾</span></button>
+                      <div class="custom-select-menu">
+                        <button type="button" class="custom-option" data-value="Code Review">Code Review</button>
+                        <button type="button" class="custom-option" data-value="Bug Investigation">Bug Investigation</button>
+                        <button type="button" class="custom-option" data-value="Refactor Planner">Refactor Planner</button>
+                        <button type="button" class="custom-option" data-value="API Design">API Design</button>
+                        <button type="button" class="custom-option" data-value="Test Generation">Test Generation</button>
+                        <button type="button" class="custom-option" data-value="Architecture Breakdown">Architecture Breakdown</button>
+                      </div>
+                      <input id="modeSelect" type="hidden" value="Code Review" />
+                    </div>
                   </label>
                   <label class="mini-field">
                     <span>Language</span>
-                    <select id="languageSelect">
-                      <option>English</option>
-                      <option>Vietnamese</option>
-                      <option>Bilingual</option>
-                    </select>
+                    <div class="custom-select" data-input="languageSelect">
+                      <button type="button" class="custom-select-trigger"><span data-label>English</span><span class="caret">▾</span></button>
+                      <div class="custom-select-menu">
+                        <button type="button" class="custom-option" data-value="English">English</button>
+                        <button type="button" class="custom-option" data-value="Vietnamese">Vietnamese</button>
+                        <button type="button" class="custom-option" data-value="Bilingual">Bilingual</button>
+                      </div>
+                      <input id="languageSelect" type="hidden" value="English" />
+                    </div>
                   </label>
                 </div>
 
                 <div class="input-stack">
-                  <label>
-                    <span>Prompt name</span>
-                    <input id="promptName" type="text" placeholder="Ví dụ: Next.js auth review" />
-                  </label>
+                  <div class="mini-grid two-col">
+                    <label>
+                      <span>Prompt name</span>
+                      <input id="promptName" type="text" placeholder="Ví dụ: Next.js auth review" />
+                    </label>
+                    <label>
+                      <span>Project / repo area</span>
+                      <input id="repoAreaInput" type="text" placeholder="apps/web/auth, api/users, billing service..." />
+                    </label>
+                  </div>
+
                   <label>
                     <span>Role</span>
                     <input id="roleInput" type="text" placeholder="Senior software engineer and code reviewer" />
                   </label>
+
                   <label>
                     <span>Task</span>
                     <textarea id="taskInput" rows="4" placeholder="Describe what the model should do."></textarea>
                   </label>
+
                   <label>
                     <span>Stack</span>
                     <input id="stackInput" type="text" placeholder="React, Next.js, TypeScript, Node.js" />
                   </label>
+
                   <div class="mini-grid two-col">
                     <label>
-                      <span>Context</span>
-                      <textarea id="contextInput" rows="6" placeholder="Expected behavior&#10;Actual behavior&#10;Logs / code path"></textarea>
+                      <span>Expected behavior</span>
+                      <textarea id="expectedInput" rows="4" placeholder="What should happen when the flow works correctly?"></textarea>
                     </label>
                     <label>
-                      <span>Constraints + Output</span>
-                      <textarea id="constraintsInput" rows="6" placeholder="Keep the fix small&#10;Preserve current style&#10;Mention tests"></textarea>
+                      <span>Actual behavior</span>
+                      <textarea id="actualInput" rows="4" placeholder="What is happening now? Include symptoms or errors."></textarea>
                     </label>
+                  </div>
+
+                  <div class="mini-grid two-col">
+                    <label>
+                      <span>Context / evidence</span>
+                      <textarea id="contextInput" rows="6" placeholder="Relevant code path&#10;Logs / traces&#10;Reproduction notes&#10;Known assumptions"></textarea>
+                    </label>
+                    <label>
+                      <span>Constraints</span>
+                      <textarea id="constraintsInput" rows="6" placeholder="Keep the fix small&#10;Preserve current style&#10;Avoid schema changes unless necessary"></textarea>
+                    </label>
+                  </div>
+
+                  <label>
+                    <span>Output format</span>
+                    <textarea id="outputInput" rows="4" placeholder="Root cause&#10;Fix summary&#10;Updated code&#10;Tests"></textarea>
+                  </label>
+                </div>
+
+                <div class="card-subsection">
+                  <div class="card-title small">Snippet Variables</div>
+                  <div class="card-caption">Chèn token vào bất kỳ ô nào đang focus, sau đó Resolve để thay bằng dữ liệu hiện tại.</div>
+                  <div class="chip-row" id="snippetRow"></div>
+                  <div class="button-row compact-row">
+                    <button id="resolveVarsBtn" class="secondary-btn">{} Resolve variables in editor</button>
                   </div>
                 </div>
 
@@ -96,6 +177,7 @@
                   <button id="refineBtn" class="secondary-btn">↻ Refine</button>
                   <button id="copyBtn" class="secondary-btn">⧉ Copy</button>
                   <button id="saveBtn" class="secondary-btn">⌁ Save</button>
+                  <button id="exportBtn" class="secondary-btn">⇩ Export</button>
                 </div>
               </div>
 
@@ -112,6 +194,8 @@
                       <div class="score-value"><span id="overallScore">0</span>/100</div>
                     </div>
                   </div>
+                  <div id="metricStack" class="metric-stack"></div>
+                  <div id="checkStack" class="check-stack"></div>
                   <p id="healthHint" class="muted-copy">Strong structure. Add stack details and output constraints for better answers.</p>
                 </div>
               </div>
@@ -128,7 +212,16 @@
             </section>
 
             <section class="tab-panel" data-panel="library">
-              <div class="panel-stack" id="libraryList"></div>
+              <div class="panel-stack">
+                <label class="search-box">
+                  <span>Search library</span>
+                  <input id="librarySearch" type="text" placeholder="Search saved prompts, history, or workspaces..." />
+                </label>
+                <div class="chip-row compact" id="libraryFilterRow"></div>
+                <div id="workspaceList" class="panel-stack"></div>
+                <div id="libraryList" class="panel-stack"></div>
+                <div id="historyList" class="panel-stack"></div>
+              </div>
             </section>
 
             <section class="tab-panel" data-panel="refine">
@@ -137,12 +230,29 @@
                 <div class="chip-row" id="refineActionRow"></div>
                 <label>
                   <span>Prompt to refine</span>
-                  <textarea id="refineSource" rows="7" class="prompt-editor" spellcheck="false"></textarea>
+                  <textarea id="refineSource" rows="7" class="prompt-editor short" spellcheck="false"></textarea>
                 </label>
                 <div class="refined-box">
                   <div class="refined-label">Refined</div>
-                  <textarea id="refinedOutput" rows="8" class="prompt-editor" spellcheck="false" placeholder="Refined prompt will appear here..."></textarea>
+                  <textarea id="refinedOutput" rows="8" class="prompt-editor short" spellcheck="false" placeholder="Refined prompt will appear here..."></textarea>
                 </div>
+                <div class="button-row">
+                  <button id="runRefineBtn" class="primary-btn">✦ Run refine</button>
+                  <button id="applyRefinedBtn" class="secondary-btn">⇢ Apply to editor</button>
+                  <button id="copyRefinedBtn" class="secondary-btn">⧉ Copy refined</button>
+                  <button id="saveRefinedBtn" class="secondary-btn">⌁ Save refined</button>
+                </div>
+              </div>
+
+              <div class="glass-card">
+                <div class="card-header-row">
+                  <div>
+                    <div class="card-title">Diff View</div>
+                    <div class="card-caption">So sánh nhanh prompt gốc và prompt refined để tránh refine bị lệch intent.</div>
+                  </div>
+                  <div id="diffStats" class="inline-badge neutral">0 added • 0 removed</div>
+                </div>
+                <div id="diffView" class="diff-view"></div>
               </div>
             </section>
           </div>
@@ -151,69 +261,46 @@
 
       <section class="info-column">
         <div class="hero-copy-card">
-          <span class="preview-pill">Preview concept</span>
-          <h1>UI extension viết prompt dành riêng cho developer</h1>
+          <span class="preview-pill">v4 upgrade</span>
+          <h1>Prompt workspace cho developer đã lên bản nâng cấp mạnh hơn.</h1>
           <p>
-            Bản này đi theo hướng <strong>dark, technical, focused</strong> — ưu tiên viết prompt nhanh,
-            chỉnh lại rõ cấu trúc và tái sử dụng prompt cho các tác vụ như review code, debug, refactor,
-            API design và test generation.
+            Bản này tập trung vào <strong>workspace preset</strong>, <strong>snippet variables</strong>,
+            <strong>custom select</strong> và <strong>diff view</strong> để flow viết prompt nhanh hơn,
+            ít lỗi hơn và tái sử dụng tốt hơn theo từng project.
           </p>
+          <ul class="hint-list">
+            <li>Dùng Workspace để preset mode, stack, constraints và output theo project.</li>
+            <li>Dùng Variables cho các prompt tái sử dụng như <code>{{stack}}</code> hoặc <code>{{expected_behavior}}</code>.</li>
+            <li>Dùng Diff View sau refine để kiểm tra prompt mới có bị đổi intent hay không.</li>
+          </ul>
         </div>
 
         <div class="feature-grid three-col">
-          <article class="glass-card feature-card">
-            <div class="feature-icon">{ }</div>
-            <div class="card-title small">Core blocks</div>
-            <p>Role, Task, Stack, Constraints, Output format. Thiết kế để prompt bớt mơ hồ và ra đúng kiểu câu trả lời kỹ thuật.</p>
-          </article>
-          <article class="glass-card feature-card">
+          <article class="feature-card">
             <div class="feature-icon">⌘</div>
-            <div class="card-title small">Smart refine</div>
-            <p>Shorten, clarify, add edge cases, better for model target. Hợp cho workflow dev cần chỉnh prompt liên tục.</p>
+            <div class="feature-title">Custom Select</div>
+            <p>Không còn phụ thuộc dropdown native khó kiểm soát. UI đồng nhất hơn trên Chrome.</p>
           </article>
-          <article class="glass-card feature-card">
-            <div class="feature-icon">✓</div>
-            <div class="card-title small">Prompt quality</div>
-            <div class="metric-stack" id="metricStack"></div>
+          <article class="feature-card">
+            <div class="feature-icon">▣</div>
+            <div class="feature-title">Workspace Presets</div>
+            <p>Lưu preset theo repo, stack và style làm việc để generate prompt nhanh hơn nhiều.</p>
+          </article>
+          <article class="feature-card">
+            <div class="feature-icon">{}</div>
+            <div class="feature-title">Variable Snippets</div>
+            <p>Chèn token nhanh và resolve theo dữ liệu hiện tại để tái sử dụng prompt linh hoạt.</p>
           </article>
         </div>
 
-        <div class="feature-grid two-col">
-          <article class="glass-card">
-            <div class="card-title">Điểm nhấn trong thiết kế này</div>
-            <div class="highlight-grid">
-              <div class="highlight-card">
-                <div class="feature-icon">&lt;/&gt;</div>
-                <div class="highlight-title">Cảm giác dev tool rõ rệt</div>
-                <p>Màu tối kỹ thuật, khối gọn, typography mạnh, đúng tinh thần công cụ cho developer.</p>
-              </div>
-              <div class="highlight-card">
-                <div class="feature-icon">⚡</div>
-                <div class="highlight-title">Thao tác nhanh</div>
-                <p>Nút Generate, Refine, Copy, Save luôn hiện rõ, ít bước thừa.</p>
-              </div>
-              <div class="highlight-card">
-                <div class="feature-icon">🐞</div>
-                <div class="highlight-title">Phù hợp use case thật</div>
-                <p>Review code, debug, viết test, lên kế hoạch refactor, phân tích log.</p>
-              </div>
-              <div class="highlight-card">
-                <div class="feature-icon">↗</div>
-                <div class="highlight-title">Có thể phát triển tiếp</div>
-                <p>Thêm history, sync, snippet library, variable prompt, model presets.</p>
-              </div>
-            </div>
+        <div class="highlight-grid two-col">
+          <article class="feature-card">
+            <div class="feature-title">Flow đề xuất</div>
+            <p>Chọn workspace → điền expected/actual/context → Generate → Refine → kiểm tra Diff → Save.</p>
           </article>
-
-          <article class="glass-card">
-            <div class="card-title">Palette</div>
-            <div class="palette-stack">
-              <div class="palette-row"><span>Background</span><code>#0A0D14</code></div>
-              <div class="palette-row"><span>Surface</span><code>#111827</code></div>
-              <div class="palette-row"><span>Card</span><code>#0F1726</code></div>
-              <div class="palette-row"><span>Border</span><code>rgba(255,255,255,0.08)</code></div>
-              <div class="palette-row"><span>Accent</span><code>Cyan → Indigo → Violet</code></div>
-            </div>
+          <article class="feature-card">
+            <div class="feature-title">Khi nào nên dùng variables</div>
+            <p>Rất hợp cho prompt mẫu lặp lại giữa nhiều repo, môi trường hoặc bug ticket tương tự nhau.</p>
           </article>
         </div>
       </section>

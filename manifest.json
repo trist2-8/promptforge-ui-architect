@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "PromptForge Dev",
-  "version": "2.0.0",
-  "description": "Developer prompt studio for code review, debugging, refactor planning, API design, and prompt refinement.",
+  "version": "4.0.0",
+  "description": "Developer prompt studio with workspace presets, custom selects, snippet variables, refine diff view, autosave, and prompt history.",
   "minimum_chrome_version": "114",
   "permissions": ["storage", "sidePanel"],
   "background": {
@@ -15,6 +15,18 @@
   "side_panel": {
     "default_path": "sidepanel.html"
   },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "icons/icon16.png",
+        "icons/icon48.png",
+        "icons/icon128.png"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
+  ],
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",

@@ -3,24 +3,25 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PromptForge Dev Settings</title>
+    <title>PromptForge Settings</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <div class="options-wrap">
-      <section class="glass-card settings-hero">
-        <span class="preview-pill">Developer profile</span>
-        <h1>Tùy chỉnh DNA của PromptForge Dev</h1>
+      <section class="settings-hero">
+        <span class="preview-pill">v4 settings</span>
+        <h1>Tinh chỉnh hành vi mặc định cho PromptForge Dev.</h1>
         <p>
-          Thiết lập tone, target model, stack ưa thích và nguyên tắc review để mọi prompt đều đi đúng phong cách của bạn.
+          Trang này điều khiển target model, ngôn ngữ mặc định, default mode, autosave và chất giọng của prompt.
+          Workspace presets vẫn được tạo và dùng trực tiếp trong side panel.
         </p>
       </section>
 
-      <section class="glass-card settings-card">
+      <section class="settings-card">
         <div class="mini-grid two-col">
           <label>
-            <span>Tên của bạn / studio</span>
-            <input id="ownerName" type="text" placeholder="koiq Studio" />
+            <span>Tên / studio</span>
+            <input id="ownerName" type="text" placeholder="Ví dụ: koiq Studio" />
           </label>
           <label>
             <span>Brand tone</span>
@@ -31,33 +32,70 @@
         <div class="mini-grid two-col">
           <label>
             <span>Default language</span>
-            <select id="defaultLanguage">
-              <option value="English">English</option>
-              <option value="Vietnamese">Vietnamese</option>
-              <option value="Bilingual">Bilingual</option>
-            </select>
+            <div class="custom-select" data-input="defaultLanguage">
+              <button type="button" class="custom-select-trigger"><span data-label>English</span><span class="caret">▾</span></button>
+              <div class="custom-select-menu">
+                <button type="button" class="custom-option" data-value="English">English</button>
+                <button type="button" class="custom-option" data-value="Vietnamese">Vietnamese</button>
+                <button type="button" class="custom-option" data-value="Bilingual">Bilingual</button>
+              </div>
+              <input id="defaultLanguage" type="hidden" value="English" />
+            </div>
           </label>
           <label>
             <span>Default mode</span>
-            <select id="defaultMode">
-              <option value="Code Review">Code Review</option>
-              <option value="Bug Investigation">Bug Investigation</option>
-              <option value="Refactor Planner">Refactor Planner</option>
-              <option value="API Design">API Design</option>
-              <option value="Test Generation">Test Generation</option>
-            </select>
+            <div class="custom-select" data-input="defaultMode">
+              <button type="button" class="custom-select-trigger"><span data-label>Code Review</span><span class="caret">▾</span></button>
+              <div class="custom-select-menu">
+                <button type="button" class="custom-option" data-value="Code Review">Code Review</button>
+                <button type="button" class="custom-option" data-value="Bug Investigation">Bug Investigation</button>
+                <button type="button" class="custom-option" data-value="Refactor Planner">Refactor Planner</button>
+                <button type="button" class="custom-option" data-value="API Design">API Design</button>
+                <button type="button" class="custom-option" data-value="Test Generation">Test Generation</button>
+                <button type="button" class="custom-option" data-value="Architecture Breakdown">Architecture Breakdown</button>
+              </div>
+              <input id="defaultMode" type="hidden" value="Code Review" />
+            </div>
           </label>
         </div>
 
-        <label>
-          <span>Target model</span>
-          <input id="targetModel" type="text" placeholder="ChatGPT / Claude" />
-        </label>
+        <div class="mini-grid two-col">
+          <label>
+            <span>Target model</span>
+            <div class="custom-select" data-input="targetModel">
+              <button type="button" class="custom-select-trigger"><span data-label>ChatGPT / Claude</span><span class="caret">▾</span></button>
+              <div class="custom-select-menu">
+                <button type="button" class="custom-option" data-value="ChatGPT / Claude">ChatGPT / Claude</button>
+                <button type="button" class="custom-option" data-value="ChatGPT">ChatGPT</button>
+                <button type="button" class="custom-option" data-value="Claude">Claude</button>
+                <button type="button" class="custom-option" data-value="Gemini">Gemini</button>
+              </div>
+              <input id="targetModel" type="hidden" value="ChatGPT / Claude" />
+            </div>
+          </label>
+          <label>
+            <span>Autosave</span>
+            <div class="custom-select" data-input="autosaveEnabled">
+              <button type="button" class="custom-select-trigger"><span data-label>Enabled</span><span class="caret">▾</span></button>
+              <div class="custom-select-menu">
+                <button type="button" class="custom-option" data-value="Enabled">Enabled</button>
+                <button type="button" class="custom-option" data-value="Disabled">Disabled</button>
+              </div>
+              <input id="autosaveEnabled" type="hidden" value="Enabled" />
+            </div>
+          </label>
+        </div>
 
-        <label>
-          <span>Preferred stack</span>
-          <textarea id="preferredStack" rows="3" placeholder="React, Next.js, TypeScript, Node.js, PostgreSQL"></textarea>
-        </label>
+        <div class="mini-grid two-col">
+          <label>
+            <span>Autosave delay (ms)</span>
+            <input id="autosaveDelay" type="number" min="300" step="100" placeholder="900" />
+          </label>
+          <label>
+            <span>Preferred stack</span>
+            <textarea id="preferredStack" rows="3" placeholder="React, Next.js, TypeScript, Node.js, PostgreSQL"></textarea>
+          </label>
+        </div>
 
         <label>
           <span>Review rules</span>
